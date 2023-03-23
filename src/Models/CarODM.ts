@@ -28,12 +28,8 @@ class CarODM {
   }
 
   public async getById(id: string): Promise<ICar | null | undefined> {
-    try {
-      const car = await this.model.findById(id);
-      return car;
-    } catch (error) {
-      return null;
-    }
+    const car = await this.model.findById(id);
+    return car;
   }
 }
 
