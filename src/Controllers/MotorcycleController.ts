@@ -26,6 +26,28 @@ class MotorcycleController {
       next(error);
     }
   }
+
+  public async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const motos = await this._service.getAll();
+      return res.status(motos.status)
+        .json(typeof motos.message === 'string' ? { message: motos.message } : motos.message);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async getById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const moto = await this._service.getById(id);
+      return res.status(moto.status)
+        .json(typeof moto.message === 'string' ? { message: moto.message } : moto.message);
+    } catch (error) {
+      const err = error as Error;
+      return res.status(500).json(err.message);
+    }
+  }
 }
 
 export default MotorcycleController;

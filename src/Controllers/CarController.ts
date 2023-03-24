@@ -34,7 +34,7 @@ class CarController {
         .json(typeof cars.message === 'string' ? { message: cars.message } : cars.message);
     } catch (error) {
       const err = error as Error;
-      return res.status(404).json(err.message);
+      return res.status(500).json(err.message);
     }
   }
 
