@@ -22,7 +22,7 @@ class CarService {
   public async getAll() {
     const carODM = new CarODM();
     const cars = await carODM.getAll();
-    if (cars) {
+    if (cars.length === 0) {
       const allCars = cars.map((car) => this.createCarDomain(car));
       return { status: 200, message: allCars };
     }

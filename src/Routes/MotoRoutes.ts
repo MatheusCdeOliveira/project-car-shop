@@ -9,5 +9,6 @@ const motoController = new MotorcycleController(motoService);
 motoRoutes.post('/motorcycles', (req, res, next) => motoController.createMotocycle(req, res, next));
 motoRoutes.get('/motorcycles', (req, res, next) => motoController.getAll(req, res, next));
 motoRoutes.get('/motorcycles/:id', (req, res) => motoController.getById(req, res));
+motoRoutes.put('/motorcycles/:id', (req, res, next) => motoController.update(req, res, next));
 
 export default motoRoutes;

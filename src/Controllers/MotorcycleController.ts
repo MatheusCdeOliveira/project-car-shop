@@ -48,6 +48,21 @@ class MotorcycleController {
       return res.status(500).json(err.message);
     }
   }
+
+  public async update(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const moto: IMotocycle = {
+      ...req.body,
+    };
+    try {
+      const update = await this._service.update(id, moto);
+      return res.status(update.status)
+        .json(typeof update.message === 'string'
+          ? { message: update.message } : update.message);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default MotorcycleController;

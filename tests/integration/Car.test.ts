@@ -70,6 +70,17 @@ describe('Deveria testar as camadas de car', function () {
     expect(result).to.be.deep.equal({ status: 200, message: getAll });
   });
 
+  it('Deveria tentar buscar todos os carros sem SUCESSO ', async function () {
+    // Arrange
+   
+    sinon.stub(Model, 'find').resolves([]);
+
+    const service = new CarService();
+    const result = await service.getAll();
+
+    expect(result).to.be.deep.equal({ status: 404, message: 'Car not found' });
+  });
+
   it('Deveria buscar um carro com ID específico com SUCESSO', async function () {
     // Arrange
    
