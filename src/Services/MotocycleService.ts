@@ -22,7 +22,7 @@ class MotorcycleService {
   public async getAll() {
     const motocycleODM = new MotorcycleODM();
     const motos = await motocycleODM.getAll();
-    if (motos.length === 0) {
+    if (motos.length > 0) {
       const allMotos = motos.map((moto) => this.createMotocycleDomain(moto));
       return { status: 200, message: allMotos };
     }

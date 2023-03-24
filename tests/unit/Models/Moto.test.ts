@@ -1,12 +1,26 @@
 import { expect } from 'chai';
 import { Model } from 'mongoose';
 import sinon from 'sinon';
-import IMotocycle from '../../src/Interfaces/IMotorcycle';
-import MotorcycleService from '../../src/Services/MotocycleService';
+import Motorcycle from '../../../src/Domains/Motorcycle';
+import IMotocycle from '../../../src/Interfaces/IMotorcycle';
+import MotorcycleService from '../../../src/Services/MotocycleService';
 
-const createMoto: IMotocycle = {
+const motoNotFound = 'Motorcycle not found';
+
+const motoOutput = new Motorcycle({
   id: '641df7668ae7b3776c3765f4',
-  model: 'Honda Cb 600f Hornet',
+  model: 'Honda Cb 800f Hornet',
+  year: 2005,
+  color: 'Yellow',
+  status: true,
+  buyValue: 30,
+  category: 'Street',
+  engineCapacity: 600,
+});
+
+const moto = {
+  id: '641df7668ae7b3776c3765f4',
+  model: 'Honda Cb 800f Hornet',
   year: 2005,
   color: 'Yellow',
   status: true,
@@ -53,12 +67,12 @@ describe('Deveria testar as camadas de moto', function () {
   it('Deveria criar uma moto nova com SUCESSO', async function () {
     // Arrange
    
-    sinon.stub(Model, 'create').resolves(createMoto);
+    sinon.stub(Model, 'create').resolves(motoOutput);
 
     const service = new MotorcycleService();
-    const result = await service.createMotocycle(createMoto);
+    const result = await service.createMotocycle(moto);
 
-    expect(result).to.be.deep.equal(createMoto);
+    expect(result).to.be.deep.equal(motoOutput);
   });
 
   it('Deveria buscar todas as motos com SUCESSO', async function () {
@@ -80,7 +94,7 @@ describe('Deveria testar as camadas de moto', function () {
     const service = new MotorcycleService();
     const result = await service.getAll();
 
-    expect(result).to.be.deep.equal({ status: 404, message: 'Motorcycle not found' });
+    expect(result).to.be.deep.equal({ status: 404, message: motoNotFound });
   });
 
   it('Deveria buscar uma moto com ID específico com SUCESSO', async function () {
@@ -102,7 +116,32 @@ describe('Deveria testar as camadas de moto', function () {
     const service = new MotorcycleService();
     const result = await service.getById('651df7728ae7b3776c3765f6');
 
-    expect(result).to.be.deep.equal({ status: 404, message: 'Motorcycle not found' });
+    expect(result).to.be.deep.equal({ status: 404, message: motoNotFound });
+  });
+
+  it('Deveria buscar uma moto pelo ID e atualizar', async function () {
+    // Arrange
+   
+    sinon.stub(Model, 'findByIdAndUpdate').resolves(motoOutput);
+    sinon.stub(Model, 'findById').resolves(motoOutput);
+
+    const service = new MotorcycleService();
+    const result = await service.update('641df7668ae7b3776c3765f4', moto);
+
+    expect(result).to.deep.equal({ status: 200, message: moto });
+  });
+
+  it('Deveria buscar um carro por um id inexistente e não atualizar', async function () {
+    // Arrange
+   
+    sinon.stub(Model, 'findById').resolves(null);
+    sinon.stub(Model, 'findByIdAndUpdate')
+      .resolves({ status: 404, message: 'Motorcycle not found' });
+
+    const service = new MotorcycleService();
+    const result = await service.update('651df7668ae7b3776c3765f4', moto);
+
+    expect(result).to.deep.equal({ status: 404, message: motoNotFound });
   });
 
   afterEach(function () {
